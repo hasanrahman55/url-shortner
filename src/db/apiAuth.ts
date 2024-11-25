@@ -19,30 +19,6 @@ export async function getCurrentUser() {
   return data.session?.user;
 }
 
-// export async function signUp({ email, password, name, profile_pic }) {
-//   const fileName = `dp-${name.split(" ").join("-")}-${Math.random}`;
-//   const { error: storageError } = await supabase.storage
-//     .from("profile_pic")
-//     .upload(fileName, profile_pic);
-//   if (storageError) throw new Error(storageError.message);
-
-//   const supabaseUrl = process.env.VITE_SUPABASE_URL;
-
-//   const { data, error } = await supabase.signUp({
-//     email,
-//     password,
-//     options: {
-//       data: {
-//         name,
-//         profile_pic: `${supabaseUrl}/storage/buckets/profile_pic/${profile_pic}`,
-//       },
-//     },
-//   });
-//   if (error) throw new Error(storageError.message);
-
-//   return data;
-// }
-
 export async function signUp({ name, email, password, profile_pic }) {
   const fileName = `dp-${name.split(" ").join("-")}-${Math.random()}`;
 
@@ -66,4 +42,9 @@ export async function signUp({ name, email, password, profile_pic }) {
   if (error) throw new Error(error.message);
 
   return data;
+}
+
+export async function logout() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
 }

@@ -38,12 +38,12 @@ export default function Login() {
 
   const { data, loading, error, fn: fnLogin } = useFetch(login, formData);
 
-  const { fnUser } = UrlState();
+  const { fetchUser } = UrlState();
 
   useEffect(() => {
     if (error === null && data) {
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
-      fnUser();
+      fetchUser();
     }
   }, [data, error]);
 

@@ -1,40 +1,42 @@
 import Login from "@/components/login";
-import SignUp from "@/components/signup";
+import Signup from "@/components/signup";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UrlState } from "@/context";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const Auth = () => {
-  const [searchParams] = useSearchParams();
-  const longLink = searchParams.get("createNew");
-  const { isAuthenticated, loading } = UrlState();
-
+function Auth() {
+  let [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { isAuthenticated, loading } = UrlState();
+  const longLink = searchParams.get("createNew");
 
   useEffect(() => {
-    if (isAuthenticated && !loading) {
+    if (isAuthenticated && !loading)
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
-    }
-  }, [isAuthenticated, loading]);
+  }, [isAuthenticated, loading, navigate]);
 
   return (
-    <div className="mt-32 flex flex-col items-center justify-center gap-10">
-      <h1>{longLink ? "login in first" : "Login/sign up"}</h1>
+    <div className="mt-36 flex flex-col items-center gap-10">
+      <h1 className="text-5xl font-extrabold">
+        {searchParams.get("createNew")
+          ? "Hold up! Let's login first.."
+          : "Login / Signup"}
+      </h1>
       <Tabs defaultValue="login" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="signUp">Sign Up</TabsTrigger>
+          <TabsTrigger value="signup">Signup</TabsTrigger>
         </TabsList>
         <TabsContent value="login">
           <Login />
         </TabsContent>
-        <TabsContent value="signUp">
-          <SignUp />
+        <TabsContent value="signup">
+          <Signup />
         </TabsContent>
       </Tabs>
     </div>
   );
-};
+}
 
 export default Auth;

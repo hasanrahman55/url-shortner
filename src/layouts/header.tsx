@@ -11,43 +11,70 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LinkIcon, LogOut } from "lucide-react";
+import { UrlState } from "@/context";
+import useFetch from "@/hook/use-fetch";
+import { logout } from "@/db/apiAuth";
+import { useEffect } from "react";
+import { BarLoader } from "react-spinners";
 
 function Header() {
   const navigate = useNavigate();
-  const user = true;
+  const { user, fetchUser } = UrlState();
+  const { loading, fn: fnLogout } = useFetch(logout);
+
+  useEffect(() => {
+    fnLogout();
+  }, []);
+
   return (
-    <nav className="px-16 py-4 flex flex-row justify-between items-center">
-      <Link to="/">
-        <img src="/logo.jpg" alt="trim logo" className="w-10 h-10" />
-      </Link>
-      <div>
-        {!user ? (
-          <Button variant="outline" onClick={() => navigate("/auth")}>
-            Button
-          </Button>
-        ) : (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="w-10 rounded-full overflow-hidden">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LinkIcon />
-                My Links
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-400">
-                <LogOut /> Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
-    </nav>
+    <>
+      <nav className="px-16 py-4 flex flex-row justify-between items-center">
+        <Link to="/">
+          <img src="/logo.jpg" alt="trim logo" className="w-10 h-10" />
+        </Link>
+        <div>
+          {!user ? (
+            <Button variant="outline" onClick={() => navigate("/auth")}>
+              Login
+            </Button>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-10 rounded-full overflow-hidden">
+                <Avatar>
+                  <AvatarImage src={user.user_metadata.profile_pic} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>
+                  {user.user_metadata?.name}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link to={"/dashboard"}>
+                    <LinkIcon className="mr-2 w-4 h-4 " />
+                    My Links
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    fnLogout().then(() => {
+                      fetchUser();
+                      navigate("/");
+                    });
+                  }}
+                  className="text-red-400"
+                >
+                  <LogOut />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      </nav>
+      {loading && <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />}
+    </>
   );
 }
 
