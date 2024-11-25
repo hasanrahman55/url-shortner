@@ -1,3 +1,4 @@
+import CreateLink from "@/components/create-link";
 import Error from "@/components/error";
 import LinkCard from "@/components/link-card";
 import { Button } from "@/components/ui/button";
@@ -71,7 +72,8 @@ function Dashboard() {
 
         <div className="flex justify-between mt-16">
           <h1>My Links</h1>
-          <Button>Create Like</Button>
+
+          <CreateLink />
         </div>
 
         <div className="relative mt-4">
