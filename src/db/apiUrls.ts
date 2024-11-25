@@ -9,3 +9,10 @@ export async function getUrls(user_id) {
   if (error) throw new Error(error.message);
   return data;
 }
+
+export async function deleteUrl(id) {
+  const { data, error } = await supabase.from("urls").delete().eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return data;
+}
