@@ -10,13 +10,6 @@ export async function getUrls(user_id) {
   return data;
 }
 
-export async function deleteUrl(id) {
-  const { data, error } = await supabase.from("urls").delete().eq("id", id);
-
-  if (error) throw new Error(error.message);
-  return data;
-}
-
 export async function createUrl(
   { title, longUrl, customUrl, user_id },
   qrcode
@@ -38,7 +31,7 @@ export async function createUrl(
       {
         title,
         user_id,
-        // original_url: longUrl,
+        original_url: longUrl,
         custom_url: customUrl || null,
         short_url,
         qr,
@@ -51,5 +44,26 @@ export async function createUrl(
     throw new Error("Error creating short URL");
   }
 
+  return data;
+}
+
+export async function deleteUrl(id) {
+  const { data, error } = await supabase.from("urls").delete().eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function getLongUrl(id) {
+  const { data, error } = await supabase
+    .from("urls")
+    .select("id, original_url")
+    .or(`short_url.eq.${id},custom_url.eq.${id}`)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    console.error("Error fetching short link:", error);
+    return;
+  }
   return data;
 }
