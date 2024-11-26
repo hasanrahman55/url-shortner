@@ -60,7 +60,7 @@ export default function CreateLink() {
 
   useEffect(() => {
     if (error === null && data) {
-      navigate(`/link/${data[0].id}`);
+      navigate(`/link-page/${data[0].id}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, data]);

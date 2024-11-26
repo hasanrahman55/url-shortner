@@ -9,6 +9,8 @@ function RequireAuth({ children }) {
   const { loading, isAuthenticated } = UrlState();
 
   useEffect(() => {
+    console.log("text" + isAuthenticated);
+
     if (!isAuthenticated && loading === false) navigate("/auth");
   }, [isAuthenticated, loading]);
 
